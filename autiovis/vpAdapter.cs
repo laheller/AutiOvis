@@ -6,12 +6,9 @@ using Android.Util;
 using Android.Speech.Tts;
 using Android.Net;
 using Android.Support.V4.View;
-using System.Collections.Generic;
 using Java.Lang;
 using Com.Bumptech.Glide;
 using GoogleGson;
-using GoogleGson.Reflect;
-using Microsoft.CSharp;
 
 namespace autiovis
 {
@@ -19,36 +16,32 @@ namespace autiovis
 	{
 		private readonly string TAG = "[AutiOvis]";
 		private Context mc = null;
-		private struct card
-		{
-			public Uri url;
-			public string desc;
-		}
-		private List<card> mCards = null;
+		private JsonArray mCards = null;
 
 		// constructor
 		public VPAdapter(Context c, int max)
 		{
 			mc = c;
-			mCards = new List<card>(max);
+			mCards = new JsonArray();
 		}
 
 		// helper method - adds new item to the list
 		public void AddCard(Uri u, string d)
 		{
-			mCards.Add(new card() { url = u, desc = d });
+			var o = new JsonObject();
+			o.AddProperty("url", u.ToString());
+			o.AddProperty("desc", d);
+			mCards.Add(o);
 		}
 
 		// helper method - saves the whole list to as preference
 		public bool SaveList(string key)
 		{
-			if (mCards.Count == 0) return false;
+			if (mCards.Size() == 0) return false;
 			var sp = mc.GetSharedPreferences("cards", FileCreationMode.Private);
 			var ed = sp.Edit();
 			var gson = new Gson();
-			var arr = new JsonArray();
-			foreach (card item in mCards) arr.Add(item.url.ToString() + "|" + item.desc);
-			var json = gson.ToJson(arr);
+			var json = gson.ToJson(mCards);
 			Log.Debug(TAG, json);
 			ed.Remove(key);
 			ed.PutString(key, json);
@@ -69,9 +62,9 @@ namespace autiovis
 				for (int i = 0; i < arr.Size(); i++)
 				{
 					var item = arr.Get(i);
-					Log.Debug(TAG, "Item1: " + item.AsString);
-					var sc = item.AsString.Split(new char[] { '|' });
-					this.AddCard(Uri.Parse(sc[0]), sc[1]);
+					var o = item.AsJsonObject;
+					Log.Debug(TAG, "Item1: " + o.ToString());
+					this.AddCard(Uri.Parse(o.Get("url").AsString), o.Get("desc").AsString);
 				}
 			}
 		}
@@ -85,7 +78,7 @@ namespace autiovis
 		{
 			get
 			{
-				return mCards.Count;
+				return mCards.Size();
 			}
 		}
 
@@ -95,15 +88,17 @@ namespace autiovis
 			var ll = (LinearLayout)li.Inflate(Resource.Layout.Card, null, false);
 
 			var iv = ll.FindViewById<ImageView>(Resource.Id.img);
-			Glide.With(mc).LoadFromMediaStore(mCards[position].url).Thumbnail(0.1f).Into(iv);
+			var url = Uri.Parse(mCards.Get(position).AsJsonObject.Get("url").AsString);
+			Glide.With(mc).LoadFromMediaStore(url).Thumbnail(0.1f).Into(iv);
+			var desc = mCards.Get(position).AsJsonObject.Get("desc").AsString;
 			iv.Click += (sender, e) =>
 			{
 				Log.Debug(TAG, "Clicked on position: " + position);
-				if (!MainActivity.tts.IsSpeaking) MainActivity.tts.Speak(mCards[position].desc, QueueMode.Flush, null);
+				if (!MainActivity.tts.IsSpeaking) MainActivity.tts.Speak(desc, QueueMode.Flush, null);
 			};
 
 			var tv = ll.FindViewById<TextView>(Resource.Id.txt);
-			tv.Text = mCards[position].desc;
+			tv.Text = desc;
 			this.GetPageTitleFormatted(position);
 
 			var vp = container.JavaCast<ViewPager>();
@@ -126,7 +121,8 @@ namespace autiovis
 
 		public override ICharSequence GetPageTitleFormatted(int position)
 		{
-			return new String(string.Format("[ {0} ]", mCards[position].desc));
+			var desc = mCards.Get(position).AsJsonObject.Get("desc").AsString;
+			return new String(string.Format("[ {0} ]", desc));
 		}
 	}
 }

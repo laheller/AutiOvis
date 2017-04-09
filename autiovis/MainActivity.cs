@@ -6,7 +6,6 @@ using Android.Runtime;
 using Android.Content;
 using Android.Support.V4.View;
 using Android.Util;
-using Android.Content.PM;
 using Java.Util;
 
 namespace autiovis
@@ -15,7 +14,7 @@ namespace autiovis
 			  MainLauncher = true,
 			  Icon = "@mipmap/autism",
 			  Name = "hu.lheller.AutioVis",
-			  ScreenOrientation = ScreenOrientation.Portrait,
+			  /* ScreenOrientation = Android.Content.PM.ScreenOrientation.Portrait, */
 			  Theme = "@android:style/Theme.Holo.Light.DarkActionBar"
 			 )]
 	public class MainActivity : Activity, TextToSpeech.IOnInitListener

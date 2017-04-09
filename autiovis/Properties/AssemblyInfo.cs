@@ -9,7 +9,7 @@ using Android.App;
 [assembly: AssemblyTitle("autiovis")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("hu.lheller")]
 [assembly: AssemblyProduct("")]
 [assembly: AssemblyCopyright("(c) Ladislav Heller")]
 [assembly: AssemblyTrademark("")]
