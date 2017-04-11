@@ -1,4 +1,5 @@
-﻿using Android.Runtime;
+﻿using Android.App;
+using Android.Runtime;
 using Android.Content;
 using Android.Views;
 using Android.Widget;
@@ -96,6 +97,28 @@ namespace autiovis
 				Log.Debug(TAG, "Clicked on position: " + position);
 				if (!MainActivity.tts.IsSpeaking) MainActivity.tts.Speak(desc, QueueMode.Flush, null);
 			};
+			iv.LongClick += (sender, e) =>
+			{
+				//Toast.MakeText(mc, "LongClicked", ToastLength.Short).Show();
+				var ct = new EditText(mc);
+				ct.Text = desc;
+				var ad = new AlertDialog.Builder(mc);
+				ad.SetTitle("Change text");
+				ad.SetMessage("Enter new text for card description!");
+				ad.SetView(ct);
+				ad.SetPositiveButton("OK", (o, ea) => {
+					var jobj = new JsonObject();
+					jobj.AddProperty("url", url.ToString());
+					jobj.AddProperty("desc", ct.Text);
+					mCards.Set(position, jobj);
+					desc = ct.Text;
+					this.NotifyDataSetChanged();
+					var pager = container.JavaCast<ViewPager>();
+					pager.SetCurrentItem(position, true);
+				});
+				ad.SetNegativeButton("Cancel", (o, ea) => { });
+				ad.Show();
+			};
 
 			var tv = ll.FindViewById<TextView>(Resource.Id.txt);
 			tv.Text = desc;
@@ -104,13 +127,6 @@ namespace autiovis
 			var vp = container.JavaCast<ViewPager>();
 			vp.AddView(ll);
 			return ll;
-
-			//var ad = new Android.App.AlertDialog.Builder(mc);
-			//ad.SetTitle("Exception!");
-			//ad.SetMessage(ex.Message);
-			//ad.SetPositiveButton("OK", (sender, e) => { });
-			//ad.Show();
-			//Log.Error(TAG, ex.ToString());
 		}
 
 		public override void DestroyItem(View container, int position, Object objectValue)
