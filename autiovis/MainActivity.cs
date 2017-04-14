@@ -33,10 +33,21 @@ namespace autiovis
 
 		public void OnInit([GeneratedEnum] OperationResult status)
 		{
-			if (status == OperationResult.Error)
+			var loc = Locale.Default;
+			switch (status)
 			{
-				tts.SetLanguage(Locale.Default);
+				case OperationResult.Success:
+					loc = Locale.Default;
+					break;
+				case OperationResult.Error:
+					loc = Locale.English;
+					break;
+				default:
+					Log.Debug(TAG, "Should not happen!");
+					break;
 			}
+			if (tts != null) tts.SetLanguage(loc);
+			Log.Debug(TAG, "Locale set to: " + loc);
 		}
 
 		protected override void OnCreate(Bundle savedInstanceState)
@@ -45,12 +56,30 @@ namespace autiovis
 
 			SetContentView(Resource.Layout.Main);
 
-			// configure TTS engine
-			tts = new TextToSpeech(this, this, engine);
-			var lang = Locale.Default;
-			tts.SetLanguage(lang);
-			tts.SetPitch(1.0f);
-			tts.SetSpeechRate(1.0f);
+			tts = new TextToSpeech(this, this);
+			var ttsEngines = tts.Engines;
+			var ec = ttsEngines.Count;
+			Log.Debug(TAG, "Installed TTS engines: " + ec);
+			foreach (var e in ttsEngines)
+			{
+				Log.Debug(TAG, "Engine name: " + e.Name);
+				Log.Debug(TAG, "Engine label: " + e.Label);
+			}
+
+			if (ec > 0)
+			{
+				// configure TTS engine
+				tts.SetPitch(1.0f);
+				tts.SetSpeechRate(1.0f);
+			}
+			else
+			{
+				var ad = new AlertDialog.Builder(this);
+				ad.SetTitle("Warning!");
+				ad.SetMessage("No TextToSpeech engines detected." + System.Environment.NewLine + "Install a TTS engine and restart this application!");
+				ad.SetPositiveButton("OK", (sender, e) => { });
+				ad.Show();
+			}
 
 			// configure viewpager
 			vpa = new VPAdapter(this, maxImages);

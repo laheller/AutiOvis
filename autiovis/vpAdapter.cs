@@ -106,7 +106,8 @@ namespace autiovis
 				ad.SetTitle("Change text");
 				ad.SetMessage("Enter new text for card description!");
 				ad.SetView(ct);
-				ad.SetPositiveButton("OK", (o, ea) => {
+				ad.SetPositiveButton("OK", (o, ea) =>
+				{
 					var jobj = new JsonObject();
 					jobj.AddProperty("url", url.ToString());
 					jobj.AddProperty("desc", ct.Text);
@@ -120,8 +121,6 @@ namespace autiovis
 				ad.Show();
 			};
 
-			var tv = ll.FindViewById<TextView>(Resource.Id.txt);
-			tv.Text = desc;
 			this.GetPageTitleFormatted(position);
 
 			var vp = container.JavaCast<ViewPager>();
@@ -138,7 +137,7 @@ namespace autiovis
 		public override ICharSequence GetPageTitleFormatted(int position)
 		{
 			var desc = mCards.Get(position).AsJsonObject.Get("desc").AsString;
-			return new String(string.Format("[ {0} ]", desc));
+			return new String(string.Format("[{0}]", desc));
 		}
 	}
 }
