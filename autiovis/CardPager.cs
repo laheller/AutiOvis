@@ -10,26 +10,25 @@ using Java.Util;
 
 namespace autiovis
 {
-	[Activity(Label = "@string/app_name",
-			  MainLauncher = true,
+	[Activity(Label = "Cards",
+			  MainLauncher = false,
 			  Icon = "@mipmap/autism",
-			  Name = "hu.lheller.AutioVis",
+			  Name = "hu.lheller.CardPager",
 			  /* ScreenOrientation = Android.Content.PM.ScreenOrientation.Portrait, */
 			  Theme = "@android:style/Theme.Holo.Light.DarkActionBar"
 			 )]
-	public class MainActivity : Activity, TextToSpeech.IOnInitListener
+	public class CardPager : Activity, TextToSpeech.IOnInitListener
 	{
-		private readonly string TAG = "[AutiOvis]";
-		private readonly string engine = "com.google.android.tts";
+		readonly string TAG = "[AutiOvis]";
+		//private readonly string engine = "com.google.android.tts";
 		//private readonly string engine = "com.samsung.SMT";
-		private readonly string keyName = "cards";
-		private readonly int RC = 0x00050001;
-		private readonly int maxImages = 128;
+		readonly int RC = 0x00050001;
+		readonly int maxImages = 128;
 
 		public static TextToSpeech tts = null;
 
-		private VPAdapter vpa = null;
-		private ViewPager pager = null;
+		VPAdapter vpa = null;
+		ViewPager pager = null;
 
 		public void OnInit([GeneratedEnum] OperationResult status)
 		{
@@ -56,6 +55,11 @@ namespace autiovis
 
 			SetContentView(Resource.Layout.Main);
 
+			// Get data from caller activity
+			var json = Intent.GetStringExtra("CARDS") ?? "N/A";
+			Log.Debug(TAG, "Data received: " + json);
+
+			// Initialize and configure Text2speech engine
 			tts = new TextToSpeech(this, this);
 			var ttsEngines = tts.Engines;
 			var ec = ttsEngines.Count;
@@ -82,8 +86,7 @@ namespace autiovis
 			}
 
 			// configure viewpager
-			vpa = new VPAdapter(this, maxImages);
-			vpa.LoadList(keyName);
+			vpa = new VPAdapter(this, json);
 			pager = FindViewById<ViewPager>(Resource.Id.pager);
 			pager.Adapter = vpa;
 
@@ -113,7 +116,6 @@ namespace autiovis
 		{
 			base.OnDestroy();
 			tts.Shutdown();
-			vpa.SaveList(keyName);
 			Log.Debug(TAG, "Destroyed...");
 		}
 
@@ -126,7 +128,7 @@ namespace autiovis
 				var uri = data.Data;
 
 				var txt = new EditText(this);
-				txt.Text = "Title";
+				txt.Hint = "Title";
 				var ad = new AlertDialog.Builder(this);
 				ad.SetTitle("Enter card title!");
 				ad.SetMessage("Entered text will appear below the new card.");
@@ -140,6 +142,17 @@ namespace autiovis
 				ad.SetNegativeButton("Cancel", (sender, e) => { });
 				ad.Show();
 			}
+		}
+
+		public override void OnBackPressed()
+		{
+			//base.OnBackPressed(); // we should not call this
+			tts.Shutdown();
+			Toast.MakeText(this, "Back button pressed!", ToastLength.Short).Show();
+			var i = new Intent(this, typeof(Categories));
+			i.PutExtra("jsonString", vpa.GetListAsJsonString());
+			SetResult(Result.Ok, i);
+			Finish();
 		}
 	}
 }
