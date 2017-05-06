@@ -1,10 +1,6 @@
 ﻿using Android.Content;
 using Android.Widget;
 using Android.Views;
-using Android.Graphics;
-using Android.Graphics.Drawables;
-using Android.Graphics.Drawables.Shapes;
-using Android.Util;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
@@ -39,10 +35,6 @@ namespace autiovis
 		{
 			var li = (LayoutInflater)ctx.GetSystemService(Context.LayoutInflaterService);
 			var vw = (RelativeLayout)li.Inflate(Resource.Layout.CategoryItem, null, false);
-			//var cr = DP2PX(15);
-			//var lp = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.MatchParent);
-			//lp.SetMargins(cr, cr, cr, cr);
-			//vw.LayoutParameters = lp;
 			vw.SetBackgroundResource(Resource.Drawable.CatListItemStyle);
 
 			var iv1 = vw.FindViewById<ImageView>(Resource.Id.imageView1);
@@ -89,11 +81,5 @@ namespace autiovis
 			cat.cards = JsonConvert.DeserializeObject<List<Categories.card>>(jsonString);
 			items[position] = cat;
 		}
-
-		//private int DP2PX(int dp)
-		//{
-		//	//px = dp*dpi/160
-		//	return (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, dp, ctx.Resources.DisplayMetrics);
-		//}
 	}
 }

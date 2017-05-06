@@ -2,9 +2,6 @@
 using Android.OS;
 using Android.Widget;
 using Android.Util;
-using Android.Graphics;
-using Android.Graphics.Drawables;
-using Android.Graphics.Drawables.Shapes;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -65,8 +62,6 @@ namespace autiovis
 			ada.LoadSPData(KEYNAME);
 			var lvCats = FindViewById<ListView>(Resource.Id.catList);
 
-			//var cr = DP2PX(15);
-			//lvCats.Background = CreateShape(cr, Color.LightSkyBlue, 10.0f);
 			lvCats.SetBackgroundResource(Resource.Drawable.CatListStyle);
 			lvCats.Adapter = ada;
 			lvCats.ItemClick += (sender, e) =>
@@ -140,22 +135,5 @@ namespace autiovis
 				ada.SetItemAt(lastPosition, null, null, jsonString);
 			}
 		}
-
-		//private int DP2PX(int dp)
-		//{
-		//	//px = dp*dpi/160
-		//	return (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, dp, Resources.DisplayMetrics);
-		//}
-
-		//private ShapeDrawable CreateShape(int cr, Color c, float sw)
-		//{
-		//	var shd = new ShapeDrawable(new RoundRectShape(new float[] { cr, cr, cr, cr, cr, cr, cr, cr }, null, null));
-		//	shd.Paint.Flags = PaintFlags.AntiAlias;
-		//	shd.Paint.Color = c;
-		//	shd.Paint.SetStyle(Paint.Style.Stroke);
-		//	shd.Paint.StrokeCap = Paint.Cap.Butt;
-		//	shd.Paint.StrokeWidth = sw;
-		//	return shd;
-		//}
 	}
 }
