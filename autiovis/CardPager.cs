@@ -91,8 +91,8 @@ namespace autiovis
 			pager.Adapter = vpa;
 
 			// configure PagerTabStrip
-			//var pts = pager.FindViewById<PagerTabStrip>(Resource.Id.pts);
-			//pts.SetBackgroundColor(Android.Graphics.Color.AliceBlue);
+			var pts = pager.FindViewById<PagerTabStrip>(Resource.Id.pts);
+			pts.SetBackgroundResource(Resource.Drawable.TabStripStyle);
 
 			// get button and set click event handler
 			var btnAddPic = FindViewById<Button>(Resource.Id.btnAddPic);

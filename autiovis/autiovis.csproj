@@ -81,6 +81,7 @@
     <AndroidResource Include="Resources\layout\CategoryItem.axml" />
     <AndroidResource Include="Resources\drawable\CatListItemStyle.xml" />
     <AndroidResource Include="Resources\drawable\CatListStyle.xml" />
+    <AndroidResource Include="Resources\drawable\TabStripStyle.xml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\drawable\" />
