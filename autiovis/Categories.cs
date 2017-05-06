@@ -65,9 +65,9 @@ namespace autiovis
 			ada.LoadSPData(KEYNAME);
 			var lvCats = FindViewById<ListView>(Resource.Id.catList);
 
-			var cr = DP2PX(15);
-			lvCats.Background = CreateShape(cr, Color.LightSkyBlue, 10.0f);
-			//lvCats.SetBackgroundResource(Resource.Mipmap.autism);
+			//var cr = DP2PX(15);
+			//lvCats.Background = CreateShape(cr, Color.LightSkyBlue, 10.0f);
+			lvCats.SetBackgroundResource(Resource.Drawable.CatListStyle);
 			lvCats.Adapter = ada;
 			lvCats.ItemClick += (sender, e) =>
 			{
@@ -141,21 +141,21 @@ namespace autiovis
 			}
 		}
 
-		private int DP2PX(int dp)
-		{
-			//px = dp*dpi/160
-			return (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, dp, Resources.DisplayMetrics);
-		}
+		//private int DP2PX(int dp)
+		//{
+		//	//px = dp*dpi/160
+		//	return (int)TypedValue.ApplyDimension(ComplexUnitType.Dip, dp, Resources.DisplayMetrics);
+		//}
 
-		private ShapeDrawable CreateShape(int cr, Color c, float sw)
-		{
-			var shd = new ShapeDrawable(new RoundRectShape(new float[] { cr, cr, cr, cr, cr, cr, cr, cr }, null, null));
-			shd.Paint.Flags = PaintFlags.AntiAlias;
-			shd.Paint.Color = c;
-			shd.Paint.SetStyle(Paint.Style.Stroke);
-			shd.Paint.StrokeCap = Paint.Cap.Butt;
-			shd.Paint.StrokeWidth = sw;
-			return shd;
-		}
+		//private ShapeDrawable CreateShape(int cr, Color c, float sw)
+		//{
+		//	var shd = new ShapeDrawable(new RoundRectShape(new float[] { cr, cr, cr, cr, cr, cr, cr, cr }, null, null));
+		//	shd.Paint.Flags = PaintFlags.AntiAlias;
+		//	shd.Paint.Color = c;
+		//	shd.Paint.SetStyle(Paint.Style.Stroke);
+		//	shd.Paint.StrokeCap = Paint.Cap.Butt;
+		//	shd.Paint.StrokeWidth = sw;
+		//	return shd;
+		//}
 	}
 }
