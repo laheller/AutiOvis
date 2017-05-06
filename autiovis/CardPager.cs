@@ -88,6 +88,7 @@ namespace autiovis
 			// configure viewpager
 			vpa = new VPAdapter(this, json);
 			pager = FindViewById<ViewPager>(Resource.Id.pager);
+			pager.SetBackgroundResource(Resource.Drawable.PagerStyle);
 			pager.Adapter = vpa;
 
 			// configure PagerTabStrip

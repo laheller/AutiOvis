@@ -51,7 +51,10 @@ namespace autiovis
 			public const int CatListStyle = 2130837505;
 			
 			// aapt resource value: 0x7f020002
-			public const int TabStripStyle = 2130837506;
+			public const int PagerStyle = 2130837506;
+			
+			// aapt resource value: 0x7f020003
+			public const int TabStripStyle = 2130837507;
 			
 			static Drawable()
 			{
